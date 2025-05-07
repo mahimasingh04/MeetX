@@ -12,31 +12,37 @@ async function main() {
         title: 'Cricket Match',
         description: 'Weekend cricket tournament',
         location: 'City Sports Complex',
-        dateTime: new Date('2023-12-15T14:00:00')
+        dateTime: new Date('2023-12-15T14:00:00'),
+        isBooked : false
       },
       {
         title: 'Movie Night',
         description: 'Outdoor screening of classic films',
         location: 'Central Park Amphitheater',
-        dateTime: new Date('2023-12-10T19:30:00')
+        dateTime: new Date('2023-12-10T19:30:00'),
+        isBooked : false
       },
       {
         title: 'Football League',
         description: 'Local football league matches',
         location: 'Regional Stadium',
-        dateTime: new Date('2023-12-20T16:00:00')
+        dateTime: new Date('2023-12-20T16:00:00'),
+        isBooked: false,
+
       },
       {
         title: 'Yoga Session',
         description: 'Morning yoga for beginners',
         location: 'Beachfront Park',
-        dateTime: new Date('2023-12-12T07:00:00')
+        dateTime: new Date('2023-12-12T07:00:00'),
+        isBooked: false
       },
       {
         title: 'Art Workshop',
         description: 'Learn watercolor painting',
         location: 'Community Arts Center',
-        dateTime: new Date('2023-12-17T11:00:00')
+        dateTime: new Date('2023-12-17T11:00:00'),
+        isBooked: false
       }
     ],
     skipDuplicates: true

@@ -9,7 +9,7 @@ const prisma = new PrismaClient();
 
 const activityRouter = express.Router();
 
-activityRouter.get("/all-activities", listActivities);
-activityRouter.get("/bookActivity/:id", authMiddleware, bookActivity );
+activityRouter.get("/all-activities", listActivities); //public endpoint
+activityRouter.post("/bookActivity/:id", authMiddleware, bookActivity );
 
 export default activityRouter;

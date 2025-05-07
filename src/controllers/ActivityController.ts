@@ -11,7 +11,9 @@ const bookActivitySchema = z.object({
   });
 
 export const listActivities = async (req : Request , res: Response) : Promise<void> => {
+  console.log('listActivities endpoint hit'); // Debug log
     try {
+      console.log('Fetching activities from database...'); // De
         const activities = await prisma.activity.findMany({
           select: {
             id: true,
@@ -47,7 +49,8 @@ export const listActivities = async (req : Request , res: Response) : Promise<vo
 
     export const bookActivity = async (req : Request, res: Response): Promise<void> => {
         try {
-            const { activityId, userId } = bookActivitySchema.parse(req.body);
+            const { activityId } = bookActivitySchema.parse(req.params);
+            const {userId} = bookActivitySchema.parse(req.userId);
         
             // Transaction for atomic operations
             const result = await prisma.$transaction(async (tx) => {
