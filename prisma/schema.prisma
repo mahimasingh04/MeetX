@@ -1,0 +1,48 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+
+model User {
+  id      String   @id @default(uuid())
+  name   String?
+  email  String?  @unique
+  password  String?
+  phone String?  @unique @db.VarChar(20) 
+  bookings  Booking[]
+}
+
+model Activity {
+  id     String   @id @default(uuid())
+  title   String
+  description String
+  location  String
+  dateTime  DateTime
+  isBooked  Boolean @default(false)
+  bookings  Booking[]
+}
+
+model Booking {
+  id         String   @id @default(uuid())
+  userId     String   // Foreign key to User
+  activityId String   // Foreign key to Activity
+  createdAt  DateTime @default(now())
+  
+  user     User     @relation(fields: [userId], references: [id])
+  activity Activity @relation(fields: [activityId], references: [id])
+
+  @@unique([userId, activityId]) // Prevent duplicate bookings
+
+}
