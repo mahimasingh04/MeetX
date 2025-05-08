@@ -6,6 +6,7 @@ import { PrismaClient } from "@prisma/client"; // Import PrismaClient
 import { getMyBookings, registerController, signinController } from "../controllers/UserController";
 import { authMiddleware } from "../middleware/authenticateUser";
 
+
 const prisma = new PrismaClient(); 
 
 

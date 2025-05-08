@@ -3,6 +3,7 @@ import jwt, { JwtPayload } from 'jsonwebtoken';
 import { verifyToken } from '../utils/jwt';
 import dotenv from 'dotenv';
 import { PrismaClient } from '@prisma/client';
+import cookieParser  from 'cookie-parser'
 dotenv.config();
 
 declare global {

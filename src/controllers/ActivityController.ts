@@ -5,10 +5,13 @@ import {z} from "zod";
 
 const prisma = new PrismaClient(); 
 
-const bookActivitySchema = z.object({
-    activityId: z.string().uuid(),
-    userId: z.string().uuid()
-  });
+const bookActivityParamsSchema = z.object({
+  params: z.object({
+    activityId: z.string().uuid({
+      message: "Invalid activity ID format (must be UUID)"
+    })
+  })
+});
 
 export const listActivities = async (req : Request , res: Response) : Promise<void> => {
   console.log('listActivities endpoint hit'); // Debug log
@@ -49,9 +52,19 @@ export const listActivities = async (req : Request , res: Response) : Promise<vo
 
     export const bookActivity = async (req : Request, res: Response): Promise<void> => {
         try {
-            const { activityId } = bookActivitySchema.parse(req.params);
-            const {userId} = bookActivitySchema.parse(req.userId);
-        
+            // Validate URL parameter
+    const { params: { activityId } } = bookActivityParamsSchema.parse(req);
+          const userId = req.userId;
+          if (!userId) {
+            res.status(400).json({
+              success: false,
+              message: 'User ID is required'
+            });
+            return;
+          }
+      
+            console.log('User ID from request:', userId); // Debug log
+            console.log('Activity ID from request:', activityId);
             // Transaction for atomic operations
             const result = await prisma.$transaction(async (tx) => {
               // 1. Check activity availability
@@ -60,18 +73,32 @@ export const listActivities = async (req : Request , res: Response) : Promise<vo
               });
         
               if (!activity) {
-                throw new Error('Activity not found');
+                res.status(404).json({
+                  success:false,
+                  message: 'Activity not found'
+                })
+                return;
               }
         
               if (activity.isBooked) {
-                throw new Error('Activity already booked');
+               res.status(400).json({
+                success: false,
+                message: 'Activity is already booked'
+               })
+                return;
               }
         
               // 2. Verify user exists
               const user = await tx.user.findUnique({
                 where: { id: userId }
               });
-              if (!user) throw new Error('User not found');
+              if (!user) {
+                res.status(404).json({
+                  success: false,
+                  message: 'user not found'
+                })
+                return;
+              }
         
               // 3. Mark activity as booked + create booking
               const [updatedActivity, newBooking] = await Promise.all([
@@ -95,6 +122,14 @@ export const listActivities = async (req : Request , res: Response) : Promise<vo
               return { activity: updatedActivity, booking: newBooking };
             });
         
+            if (!result) {
+              res.status(500).json({
+                success: false,
+                message: 'Unexpected error occurred during booking'
+              });
+              return;
+            }
+
             res.status(201).json({
               success: true,
               message: 'Booking confirmed',

@@ -4,11 +4,20 @@ import {PrismaClient} from "@prisma/client"
 import userRouter from "./routes/user"
 import activityRouter from './routes/Activity';
 import dotenv from 'dotenv';
+import cors from "cors"
 
 dotenv.config();
 
 const prisma = new PrismaClient()
 const app = express();
+
+app.use(cors({
+  origin:  'http://localhost:5173',
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
+  exposedHeaders: ['set-cookie']
+}));
 
 
 app.use(express.json());

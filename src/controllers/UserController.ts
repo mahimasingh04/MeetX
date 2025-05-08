@@ -111,18 +111,18 @@ export const registerController = async(req : Request, res: Response): Promise<v
           // Set cookie and send response
           res
             .status(200)
-            .cookie("token", token, {
+            .cookie("tokenInfo", token, {
               httpOnly: true,
-              secure: process.env.NODE_ENV === "production",
+              
               sameSite: "strict",
               maxAge: 24 * 60 * 60 * 1000, // 1 day
-              path: "/"
+              
             })
             .json({
               success: true,
               message: "Login successful",
               user: userData
-              // Don't send token in response body when using cookies
+              
             });
       
         } catch (error) {
